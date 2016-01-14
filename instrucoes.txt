@@ -1,0 +1,3 @@
+Julio o projeto esta simpes mas vai fazendo o botão acender o LED e mudar o nome de ATIVAR para DESATIVAR.
+Enquanto isso vou trabalhando no design.
+xD
