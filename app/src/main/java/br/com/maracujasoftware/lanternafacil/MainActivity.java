@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     Button btAtivar;
-    Camera camera;
+   static  Camera camera = null;
     private boolean isLigtOn = false;
 
     @Override
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(MainActivity.this, "oi", Toast.LENGTH_LONG);
                 toast.show();
             }
-        });
+        });*/
        /* if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -65,10 +65,15 @@ public class MainActivity extends AppCompatActivity {
                 // Camera cam= Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
                  camera= Camera.open();
                  final Camera.Parameters p = camera.getParameters();
-
+            if(isLigtOn == false) {
                 turnOnFlash(p);
-                Toast.makeText(MainActivity.this, "Lights On!", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(MainActivity.this, "Light On!", Toast.LENGTH_SHORT).show();
+                btAtivar.setText("OFF");
+            }else{
+                turnOffFlash(p);
+                Toast.makeText(MainActivity.this, "Light Off!", Toast.LENGTH_SHORT).show();
+                btAtivar.setText("OFF");
+            }
                 /*cam.setPreviewCallback(null);
                 cam.stopPreview();
                 cam.release();
@@ -90,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         camera.setParameters(p);
         camera.stopPreview();
+        camera.release();
+        camera = null;
         isLigtOn = false;
     }
 
@@ -122,5 +129,26 @@ public class MainActivity extends AppCompatActivity {
         if(camera!=null){
             camera.release();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        camera = Camera.open();
+        camera.release();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        camera = Camera.open();
+        camera.release();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        camera = Camera.open();
+        camera.release();
     }
 }
