@@ -1,6 +1,7 @@
 package br.com.maracujasoftware.lanternafacil;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -18,6 +19,17 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     Button btAtivar;
+    Camera camera;
+    private boolean isLigtOn = false;
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        camera = Camera.open();
+        camera.release();
+
+        //final Camera.Parameters p = camera.getParameters();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,21 +54,43 @@ public class MainActivity extends AppCompatActivity {
         }
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.CAMERA},
-                48);
+                48);*/
+        Context context = this;
+        PackageManager pm = context.getPackageManager();
 
         btAtivar = (Button) findViewById(R.id.button_ativar);
         btAtivar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Camera cam = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+                // Camera cam= Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+                 camera= Camera.open();
+                 final Camera.Parameters p = camera.getParameters();
+
+                turnOnFlash(p);
+                Toast.makeText(MainActivity.this, "Lights On!", Toast.LENGTH_SHORT).show();
+
+                /*cam.setPreviewCallback(null);
+                cam.stopPreview();
                 cam.release();
                 Camera.Parameters p = cam.getParameters();
                 p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 cam.setParameters(p);
-                cam.startPreview();
+                cam.startPreview();*/
             }
-        });*/
+        });
 
+    }
+    private void turnOnFlash(Camera.Parameters p) {
+        p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        camera.setParameters(p);
+        camera.startPreview();
+        isLigtOn = true;
+    }
+    private void turnOffFlash(Camera.Parameters p){
+        p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        camera.setParameters(p);
+        camera.stopPreview();
+        isLigtOn = false;
     }
 
     @Override
@@ -79,5 +113,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+
+        if(camera!=null){
+            camera.release();
+        }
     }
 }
