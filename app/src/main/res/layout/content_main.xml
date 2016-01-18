@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="br.com.maracujasoftware.lanternafacil.MainActivity"
-    android:background="#33CCCC">
+    android:background="@drawable/textura">
 
     <EditText
         android:layout_width="wrap_content"
